@@ -24,7 +24,7 @@ describe("last", function() {
 
 });
 
-/*
+
 
 describe("first", function() {
   it("should be able to pull out the first element of an array", function() {
@@ -44,6 +44,7 @@ describe("first", function() {
 
 });
 
+
 describe("each", function() {
   it("should provide value and iteration count", function() {
     var letters = ['a', 'b', 'c'];
@@ -60,6 +61,7 @@ describe("each", function() {
     ]);
   });
 });
+
 
 describe("indexOf", function() {
 
@@ -90,6 +92,7 @@ describe("indexOf", function() {
   });
 });
 
+
 describe("filter", function() {
   it("should return all even numbers in an array", function() {
     var isEven = function(num) {
@@ -108,6 +111,7 @@ describe("filter", function() {
   });
 });
 
+
 describe("reject", function() {
   it("should reject all even numbers", function() {
     var isEven = function(num) { return num % 2 === 0; };
@@ -121,6 +125,7 @@ describe("reject", function() {
     expect(evens).to.eql([2, 4, 6]);
   });
 });
+
 
 describe("uniq", function() {
   it("should return all unique values contained in an unsorted array", function() {
@@ -140,12 +145,14 @@ describe("uniq", function() {
   });
 });
 
+
 describe("map", function() {
   it("should apply a function to every value in an array", function() {
     var doubled = _.map([1, 2, 3], function(num) { return num * 2; });
     expect(doubled).to.eql([2, 4, 6]);
   });
 });
+
 
 describe("pluck", function() {
   it("should return values contained at a user-defined property", function() {
@@ -157,6 +164,7 @@ describe("pluck", function() {
     expect(_.pluck(people, 'name')).to.eql(['moe', 'curly']);
   });
 });
+
 
 describe("invoke", function() {
   it("should sort the first array", function() {
@@ -172,6 +180,7 @@ describe("invoke", function() {
   });
 });
 
+/*
 describe("invoke with function reference", function() {
   it("should sort the first array", function() {
     var list = [[5, 1, 7], [3, 2, 1]];
