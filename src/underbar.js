@@ -154,8 +154,8 @@ var _ = {};
 
   // Calls the method named by methodName on each value in the list.
   _.invoke = function(list, methodName) {
-    _.map(list, function(element) {
-      methodName(element);
+    return _.map(list, function(element) {
+      return element[methodName].apply(element);
     })
   };
 
