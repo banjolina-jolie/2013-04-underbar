@@ -98,29 +98,16 @@ var _ = {};
     // copying code in and modifying it
   };
 
-  // Produce a duplicate-free version of the array.
+  //Produce a duplicate-free version of the array.
   _.uniq = function(array) {
     var answer = [];    
     for(var i = 0; i < array.length; i++){       
-      if (!(array[i] in answer)){    
+      if (_.indexOf(answer, array[i]) === -1){    
         answer.push(array[i]);
-      };      
+      }      
     };
     return answer;
   };
-
-/*var answer = [];
-    var isSingle = true;    
-    for(var i = 0; i <= array.length; i++){       
-      if (array[i] in answer){
-
-      }else{
-        answer.push(array[i]);
-        };      
-    };
-    console.log(answer);
-    return answer;*/
-
 
   /*
    * map() is a useful primitive iteration function that works a lot
@@ -133,7 +120,7 @@ var _ = {};
     var answer = [];
     _.each(array, function(element){
       answer.push(iterator(element));
-    });
+    })
     return answer;    
   };
 
@@ -143,21 +130,22 @@ var _ = {};
    * as an example of this.
    */
 
-  // Takes an array of objects and returns and array of the values of
+  // Takes an array of objects and returns an array of the values of
   // a certain property in it. E.g. take an array of people and return
   // an array of just their ages
   _.pluck = function(obj, propertyName) {
     return _.map(obj, function(value){
       return value[propertyName];
-    });
+    })
   };
 
   // Calls the method named by methodName on each value in the list.
   _.invoke = function(list, methodName) {
-    return _.map(list, function(element) {
-      return element[methodName].apply(element);
+    return _.map(list, function(value){
+      return typeof(methodName) === "string" ? list[methodName].apply(value) : methodName.apply(value);
     })
   };
+
 
   // Reduces an array or object to a single value by repetitively calling
   // iterator(previousValue, item) for each item. previousValue should be
@@ -173,6 +161,9 @@ var _ = {};
   //   }, 0); // should be 6
   //
   _.reduce = function(obj, iterator, initialValue) {
+    console.log(obj);
+    console.log(iterator);
+    console.log(initialValue);
   };
 
   // Determine if the array or object contains a given value (using `===`).

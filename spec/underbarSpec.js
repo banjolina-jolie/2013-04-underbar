@@ -172,7 +172,7 @@ describe("invoke", function() {
   });
 });
 
-/*
+
 describe("invoke with function reference", function() {
   it("should sort the first array", function() {
     var list = [[5, 1, 7], [3, 2, 1]];
@@ -202,6 +202,8 @@ describe("reduce", function() {
   });
 
 });
+
+/*
 
 describe("contains", function() {
   it("should return true if a collection contains a user-specified value", function() {
