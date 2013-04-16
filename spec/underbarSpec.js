@@ -203,7 +203,7 @@ describe("reduce", function() {
 
 });
 
-/*
+
 
 describe("contains", function() {
   it("should return true if a collection contains a user-specified value", function() {
@@ -215,6 +215,8 @@ describe("contains", function() {
     expect(_.contains([1,3,9], 2)).to.equal(false);
   });
 });
+
+
 
 describe("every", function() {
   var getValue = function(i) { return i; };
@@ -252,6 +254,8 @@ describe("every", function() {
     expect(_.every([undefined, undefined, undefined], getValue)).to.equal(false);
   });
 });
+
+
 
 describe("any", function() {
   var nativeSome = Array.prototype.some;
@@ -306,6 +310,8 @@ describe("any", function() {
   });
 });
 
+
+
 describe("extend", function() {
   it("should extend an object with the attributes of another", function() {
     var extended = _.extend({}, {a:'b'});
@@ -338,6 +344,8 @@ describe("extend", function() {
   });
 });
 
+
+
 describe("defaults", function() {
   var result, options;
 
@@ -362,6 +370,7 @@ describe("defaults", function() {
   });
 });
 
+
 describe("once", function() {
   it("should only run a user-defined function if it hasn't been run before", function() {
     var num = 0;
@@ -374,6 +383,7 @@ describe("once", function() {
     expect(num).to.equal(1);
   });
 });
+
 
 describe("memoize", function() {
   it("a memoized function should produce the same result when called with the same arguments", function() {
@@ -396,6 +406,8 @@ describe("memoize", function() {
     expect(fastPassThrough('toString')).to.equal('toString');
   });
 });
+
+
 
 describe("delay", function() {
   var clock, delayed, callback;
@@ -426,6 +438,8 @@ describe("delay", function() {
   });
 });
 
+
+
 describe("shuffle", function() {
   it("should not modify the original object", function() {
     var numbers = _.range(10);
@@ -435,6 +449,7 @@ describe("shuffle", function() {
   });
 });
 
+/*
 describe("sortBy", function() {
   it("should sort by age", function() {
     var people = [{name : 'curly', age : 50}, {name : 'moe', age : 30}];

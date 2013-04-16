@@ -2,24 +2,45 @@ var _ = {};
 
 (function() {
 
-  // Return an array of the last n elements of an array. If n is undefined,
-  // return just the last element.
+  //Return an array of the last n elements of an array. If n is undefined,
+  //return just the last element.
+  
+  // _.last = function(array, n) {
+  //   var answer = [];
+  //   if (n === undefined || n === 1){
+  //     return array[array.length-1];
+  //   }else if(n === 0){
+  //     return answer;
+  //   }else if(!Array.isArray(array)){
+  //     for(var i = array.length-n; i < array.length; i++){
+  //       answer.push(array[i]);
+  //     }
+  //     return answer;    
+  //   }
+  //   else{
+  //     answer = array.slice(-n, array.length);
+  //     return answer;
+  //   }
+  // };
+
+
   _.last = function(array, n) {
     var answer = [];
     if (n === undefined || n === 1){
       return array[array.length-1];
-    }else if(n === 0){
+    } else if(n>array.length){
+      return array;
+    }
+    else if(n === 0){
       return answer;
-    }else if(!Array.isArray(array)){
+    }else {
       for(var i = array.length-n; i < array.length; i++){
         answer.push(array[i]);
       }
       return answer;    
-    }else{
-      answer = array.slice(-n, array.length);
-      return answer;
     }
   };
+
 
   // Like last, but for the first elements
   _.first = function(array, n) {
@@ -44,12 +65,22 @@ var _ = {};
   };
 
 
-  // Call iterator(value, key, collection) for each element of collection
+  //Call iterator(value, key, collection) for each element of collection
   _.each = function(obj, iterator) {
-    for(var i = 0; i<obj.length; i++){
-      iterator(obj[i], i, obj);
+    if(!obj) return;
+    if(obj.length){
+      for(var i = 0; i<obj.length; i++){
+        iterator(obj[i], i, obj);
+      }
+    }else{
+      for(var key in obj){
+        if (obj.hasOwnProperty(key)) {
+          iterator(obj[key], key, obj);
+        }
+      }
     }
   };
+
 
   /*
    * TIP: Here's an example of a function that needs to iterate, which we've
@@ -67,7 +98,6 @@ var _ = {};
         result = index;
       }
     });
-
     return result;
   };
 
@@ -146,7 +176,6 @@ var _ = {};
     })
   };
 
-
   // Reduces an array or object to a single value by repetitively calling
   // iterator(previousValue, item) for each item. previousValue should be
   // the return value of the previous iterator call.
@@ -160,11 +189,15 @@ var _ = {};
   //     return total + number;
   //   }, 0); // should be 6
   //
+
   _.reduce = function(obj, iterator, initialValue) {
-    console.log(obj);
-    console.log(iterator);
-    console.log(initialValue);
+    var answer = initialValue || 0;
+    _.each(obj, function(item){
+      answer = iterator(answer, item);
+    })
+    return answer;
   };
+
 
   // Determine if the array or object contains a given value (using `===`).
   _.contains = function(collection, target) {
@@ -179,16 +212,65 @@ var _ = {};
   };
 
 
-  // Determine whether all of the elements match a truth test.
-  _.every = function(obj, iterator) {
+  //Determine whether all of the elements match a truth test.
+  
+  // _.every = function(obj, iterator) {
+  //   for(var i = 0; i < obj.length; i++){
+  //     if(!iterator(obj[i])){
+  //       return false;
+  //     }
+  //   }
+  //   return true;
+  // };
+
+  
+  // _.every = function(obj, iterator) {
+  //   // console.log(obj);
+  //   // console.log(iterator);
+  //   return _.reduce(obj, function(booBoo, item){
+  //     // console.log(booBoo);
+  //     // console.log(item);
+  //     if (booBoo == false) {
+  //       return false;
+  //     }
+  //     return !!iterator(item);
+  //   }, true);
+  // };
+
+   _.every = function(obj, iterator) {
     // TIP: use reduce on this one!
+    return _.reduce(obj, function(findTrue, item) {
+      if(!findTrue){
+        return false;
+      }  
+      return Boolean(iterator(item));
+    }, true); 
   };
+
+
+
+
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
-  _.any = function(obj, iterator) {
-    // TIP: re-use every() here
-  };
+  
+
+
+    _.any = function(obj, iterator) {
+      if(!iterator){
+        iterator = function(item){return Boolean(item);}
+      }
+      for(var i = 0; i < obj.length; i++){
+        if(iterator(obj[i])){
+          return true;
+        }
+    }
+    return false;
+      };
+    
+
+
+
 
 
   /*
@@ -207,12 +289,35 @@ var _ = {};
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
   //
-  _.extend = function(obj) {
+  
+
+
+_.extend = function(obj) {
+    for (var i = 1; i < arguments.length; i++) {
+      for (var key in arguments[i]) {
+        obj[key] = arguments[i][key];
+      }
+    };
+    return obj;
   };
+
+
+
+
+
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
+    for (var i = 1; i < arguments.length; i++){
+      for (var item in arguments[i]){
+        if(!obj.hasOwnProperty(item)){
+          obj[item] = arguments[i][item];
+        }
+      }
+      
+    }
+    return obj;
   };
 
 
@@ -249,15 +354,16 @@ var _ = {};
   // Memoize should return a function that when called, will check if it has
   // already computed the result for the given argument and return that value
   // instead if possible.
+  
   _.memoize = function(func) {
-    var self = this, cache = {}
-    if(func in cache){
-      return cache[func];
-      console.log("Cache hit");
-    }else{
-      return self(func) = cache[func];
-      console.log("Cache not hit");
-    };
+    var cache = {};
+    return function(prim){
+      console.log(prim);
+      if(!cache.hasOwnProperty(prim)) {
+        cache[prim] = func(prim);
+      }
+      return cache[prim];
+    }
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -266,7 +372,14 @@ var _ = {};
   // The arguments for the original function are passed after the wait
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
-  _.delay = function(func, wait) {
+  _.delay = function(func, wait) {    
+    if(arguments.length === 2) {
+      return setTimeout(func, wait)
+    } else {
+      for (var i = 2; i < arguments.length; i++){
+        return setTimeout(func(arguments[i], arguments[i+1]), wait);
+      }
+    }
   };
 
 
@@ -276,6 +389,10 @@ var _ = {};
 
   // Shuffle an array.
   _.shuffle = function(obj) {
+    for(var i in obj){
+      obj[i] = Math.floor(Math.random() * obj.length +1)
+    }
+    return obj;
   };
 
   /* (End of pre-course curriculum) */
