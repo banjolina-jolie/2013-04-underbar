@@ -5,24 +5,6 @@ var _ = {};
   //Return an array of the last n elements of an array. If n is undefined,
   //return just the last element.
   
-  // _.last = function(array, n) {
-  //   var answer = [];
-  //   if (n === undefined || n === 1){
-  //     return array[array.length-1];
-  //   }else if(n === 0){
-  //     return answer;
-  //   }else if(!Array.isArray(array)){
-  //     for(var i = array.length-n; i < array.length; i++){
-  //       answer.push(array[i]);
-  //     }
-  //     return answer;    
-  //   }
-  //   else{
-  //     answer = array.slice(-n, array.length);
-  //     return answer;
-  //   }
-  // };
-
 
   _.last = function(array, n) {
     var answer = [];
@@ -224,29 +206,31 @@ var _ = {};
   // };
 
   
-  // _.every = function(obj, iterator) {
-  //   // console.log(obj);
-  //   // console.log(iterator);
-  //   return _.reduce(obj, function(booBoo, item){
-  //     // console.log(booBoo);
-  //     // console.log(item);
-  //     if (booBoo == false) {
+
+  //  _.every = function(obj, iterator) {
+  //   // TIP: use reduce on this one!
+  //   return _.reduce(obj, function(findTrue, item) {
+  //     if(!findTrue){
   //       return false;
-  //     }
-  //     return !!iterator(item);
-  //   }, true);
+  //     }  
+  //     return Boolean(iterator(item));
+  //   }, true); 
   // };
 
-   _.every = function(obj, iterator) {
-    // TIP: use reduce on this one!
-    return _.reduce(obj, function(findTrue, item) {
-      if(!findTrue){
+  _.every = function(obj, iterator) {
+    for(var i in obj) {
+      if(!iterator(obj[i])) {
         return false;
-      }  
-      return Boolean(iterator(item));
-    }, true); 
+      }
+    }
+    return true;
   };
 
+  // _.every = function(obj, iterator) {
+  //   return _.reduce(obj, function(total, item) {
+  //     return total && !!iterator(item);
+  //   }, true)
+  // };
 
 
 
@@ -260,7 +244,7 @@ var _ = {};
       if(!iterator){
         iterator = function(item){return Boolean(item);}
       }
-      for(var i = 0; i < obj.length; i++){
+      for(var i in obj){
         if(iterator(obj[i])){
           return true;
         }
@@ -269,7 +253,9 @@ var _ = {};
       };
     
 
-
+// return !_.every(blah, function(item){
+//   return !iterator(item)
+// })
 
 
 
@@ -355,16 +341,33 @@ _.extend = function(obj) {
   // already computed the result for the given argument and return that value
   // instead if possible.
   
+  // _.memoize = function(func) {
+  //   var cache = {};
+  //   return function(arguments){
+  //     if(!cache.hasOwnProperty(arguments)) {
+  //       cache[arguments] = func(arguments);
+  //     }
+  //     return cache[arguments];
+  //   }
+  // };
+
   _.memoize = function(func) {
     var cache = {};
-    return function(prim){
-      console.log(prim);
-      if(!cache.hasOwnProperty(prim)) {
-        cache[prim] = func(prim);
+    return function(){
+      if(cache.hasOwnProperty(arguments)) {
+        return cache[arguments];
+      } else {
+        return cache[arguments] = func.apply(this, arguments);
       }
-      return cache[prim];
     }
   };
+
+
+
+// apply takes array for 2nd argument and plugs array into function as function's arguments.  1st argument of apply is context.
+// In the case above,this could be any valid data type because there is no context (for example obj.func).
+
+
 
   // Delays a function for the given number of milliseconds, and then calls
   // it with the arguments supplied.
@@ -382,18 +385,37 @@ _.extend = function(obj) {
     }
   };
 
+  _.range = function(topNumber) {
+    var returnArray = [];
+    for(var i = 0; i<topNumber; i++) {
+      returnArray.push(i)
+    }
+    return returnArray
+  };
+
 
   /*
    * Advanced collection operations
    */
-
   // Shuffle an array.
+
+
   _.shuffle = function(obj) {
-    for(var i in obj){
-      obj[i] = Math.floor(Math.random() * obj.length +1)
+    var answer = [];
+    while(obj.length) {
+      var randomIndex = Math.floor(Math.random() * obj.length);
+      answer.push(obj[randomIndex]);
+      var newObj = [];
+      for (var i = 0; i < obj.length; i++) {
+        if(i !== randomIndex) {
+          newObj.push(obj[i]);
+        }
+      }
+      obj = newObj
     }
-    return obj;
+    return answer;
   };
+
 
   /* (End of pre-course curriculum) */
 
