@@ -56,9 +56,9 @@ var _ = {};
       }
     }else{
       for(var key in obj){
-        if (obj.hasOwnProperty(key)) {
+        //if (obj.hasOwnProperty(key)) {
           iterator(obj[key], key, obj);
-        }
+        //}
       }
     }
   };
@@ -97,29 +97,49 @@ var _ = {};
     };
 
   // Return all elements of an array that don't pass a truth test.
-  _.reject = function(collection, iterator) {
+  //   // TIP: see if you can re-use _.select() here, without simply
+  //   // copying code in and modifying it
+  // _.reject = function(collection, iterator) {
+  //   var answer = []
+  //   _.each(collection, function(element){
+  //     if(!iterator(element)){
+  //       answer.push(element);
+  //     }
+  //   })
+  //   return answer;
+  // };
 
-    var answer = []
-    _.each(collection, function(element){
-      if(!iterator(element)){
-        answer.push(element);
-      }
-    })
-    return answer;
+    _.reject = function(collection, iterator) {
     // TIP: see if you can re-use _.select() here, without simply
     // copying code in and modifying it
+    return _.filter(collection, function(value, key, list){
+      return !iterator(value, key, list);
+    })
   };
 
   //Produce a duplicate-free version of the array.
+  
+  // _.uniq = function(array) {
+  //   var answer = [];    
+  //   for(var i = 0; i < array.length; i++){       
+  //     if (_.indexOf(answer, array[i]) === -1){    
+  //       answer.push(array[i]);
+  //     }      
+  //   };
+  //   return answer;
+  // };
+
   _.uniq = function(array) {
-    var answer = [];    
-    for(var i = 0; i < array.length; i++){       
-      if (_.indexOf(answer, array[i]) === -1){    
-        answer.push(array[i]);
-      }      
-    };
-    return answer;
-  };
+    var uniqueArray = [];
+    var sortedArray = Array.prototype.sort.call(array);
+    //var sortedArray = array.sort();
+    _.each(sortedArray, function(value, key, obj) {
+      if(!(value === obj[key-1])) {
+        uniqueArray.push(value);
+      }
+    });
+    return uniqueArray;
+  }
 
   /*
    * map() is a useful primitive iteration function that works a lot
@@ -152,10 +172,25 @@ var _ = {};
   };
 
   // Calls the method named by methodName on each value in the list.
-  _.invoke = function(list, methodName) {
-    return _.map(list, function(value){
-      return typeof(methodName) === "string" ? list[methodName].apply(value) : methodName.apply(value);
-    })
+  // _.invoke = function(list, methodName) {
+  //   return _.map(list, function(value){
+  //     return typeof(methodName) === "string" ? list[methodName].apply(value) : methodName.apply(value);
+  //   })
+  // };
+
+    _.invoke = function(list, methodName) {
+    var answer = [];
+    if(typeof(methodName) === 'string'){
+      
+      _.each(list, function (value,key,obj){
+        answer.push(value[methodName]());
+      })
+    } else{
+      _.each(list, function (value, key, obj){
+        answer.push(methodName.call(value));
+      })
+    }
+    return answer;
   };
 
   // Reduces an array or object to a single value by repetitively calling
@@ -205,7 +240,6 @@ var _ = {};
   //   return true;
   // };
 
-  
 
   //  _.every = function(obj, iterator) {
   //   // TIP: use reduce on this one!
@@ -217,20 +251,21 @@ var _ = {};
   //   }, true); 
   // };
 
-  _.every = function(obj, iterator) {
-    for(var i in obj) {
-      if(!iterator(obj[i])) {
-        return false;
-      }
-    }
-    return true;
-  };
 
   // _.every = function(obj, iterator) {
-  //   return _.reduce(obj, function(total, item) {
-  //     return total && !!iterator(item);
-  //   }, true)
+  //   for(var i in obj) {
+  //     if(!iterator(obj[i])) {
+  //       return false;
+  //     }
+  //   }
+  //   return true;
   // };
+
+  _.every = function(obj, iterator) {
+    return _.reduce(obj, function(total, item) {
+      return total && !!iterator(item);
+    }, true)
+  };
 
 
 
@@ -240,22 +275,25 @@ var _ = {};
   
 
 
-    _.any = function(obj, iterator) {
-      if(!iterator){
-        iterator = function(item){return Boolean(item);}
-      }
-      for(var i in obj){
-        if(iterator(obj[i])){
-          return true;
-        }
-    }
-    return false;
-      };
+  // _.any = function(obj, iterator) {
+  //   if(!iterator){
+  //     iterator = function(item){return Boolean(item);}
+  //   }
+  //   for(var i in obj){
+  //     if(iterator(obj[i])){
+  //       return true;
+  //     }
+  // }
+  // return false;
+  // };
     
 
-// return !_.every(blah, function(item){
-//   return !iterator(item)
-// })
+  _.any = function(obj, iterator) {
+    iterator = iterator || function(item){return !!item};
+    return !_.every(obj, function(item) {
+      return !iterator(item);
+    })
+  };
 
 
 
